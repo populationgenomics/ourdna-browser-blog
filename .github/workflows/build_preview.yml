@@ -10,6 +10,7 @@ on:
 jobs:
   build-preview:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -22,6 +23,7 @@ jobs:
         if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BLOG_URL: ${{ vars.BLOG_URL }}
         run: |
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
@@ -33,7 +35,7 @@ jobs:
             --header "content-type: application/json" \
             --data "{
               \"state\": \"pending\",
-              \"target_url\": \"https://ourdna-dev.popgen.rocks/news/preview/${pr_number}\",
+              \"target_url\": \"${BLOG_URL}/news/preview/${pr_number}\",
               \"description\": \"Building preview\",
               \"context\": \"Preview\"
             }" > /dev/null
@@ -59,6 +61,8 @@ jobs:
         run: yarn install --frozen-lockfile --non-interactive --no-progress
 
       - name: Build site
+        env:
+          BLOG_URL: ${{ vars.BLOG_URL }}
         run: |
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           PATH_PREFIX="/news/preview/${pr_number}" yarn run build
@@ -77,15 +81,18 @@ jobs:
 
       - name: Deploy preview
         if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        env:
+          GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
         run: |
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/pulls/${pr_number}"
-          gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/pulls/${pr_number}"
+          gsutil -mq rsync -r "public" "gs://${GCS_BUCKET}/pulls/${pr_number}"
+          gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://${GCS_BUCKET}/pulls/${pr_number}"
 
       - name: Update preview status
         if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BLOG_URL: ${{ vars.BLOG_URL }}
         run: |
           pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
@@ -97,7 +104,7 @@ jobs:
             --header "content-type: application/json" \
             --data "{
               \"state\": \"success\",
-              \"target_url\": \"https://ourdna-dev.popgen.rocks/news/preview/${pr_number}\",
+              \"target_url\": \"${BLOG_URL}/news/preview/${pr_number}\",
               \"description\": \"Preview ready, click 'Details' to view\",
               \"context\": \"Preview\"
             }" > /dev/null
