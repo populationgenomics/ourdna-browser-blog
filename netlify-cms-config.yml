@@ -1,0 +1,81 @@
+# https://www.netlifycms.org/docs/configuration-options/
+
+backend:
+  name: github
+  repo: populationgenomics/ourdna-browser-blog
+  branch: dev
+  base_url: https://ourdna-dev.popgen.rocks/
+  auth_endpoint: /news/auth/
+  preview_context: Preview
+  squash_merges: true
+
+site_url: https://ourdna-dev.popgen.rocks/news/
+
+publish_mode: editorial_workflow
+
+media_folder: static/images
+public_folder: ../images
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    label_singular: "Post"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    preview_path: "{{slug}}/"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+      - label: "Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - label: "Relative order"
+        hint: "Order in which to display this post relative to other posts published on the same date."
+        name: "order"
+        widget: "number"
+        value_type: "int"
+        default: 1
+        min: 1
+      - label: "Categories"
+        hint: "Comma separated list of categories for this post."
+        name: "categories"
+        widget: "list"
+        required: false
+      - label: "Authors"
+        hint: "Comma separated list of authors of this post."
+        name: "authors"
+        widget: "list"
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+  - name: "changelog"
+    label: "Changelog"
+    folder: "content/changelog"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    preview_path: "{{slug}}/"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+      - label: "Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - label: "Relative order"
+        hint: "Order in which to display this post relative to other posts published on the same date."
+        name: "order"
+        widget: "number"
+        value_type: "int"
+        default: 1
+        min: 1
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
