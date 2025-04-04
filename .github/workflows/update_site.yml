@@ -59,8 +59,13 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
       - name: Deploy site
         run: |
+          gsutil ls "gs://cpg-ourdna-browser-dev-blog"
+
           gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/tmp"
           gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/tmp"
           gsutil -mq rsync -r "gs://cpg-ourdna-browser-dev-blog/tmp" "gs://cpg-ourdna-browser-dev-blog/main"
