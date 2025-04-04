@@ -26,7 +26,9 @@ jobs:
 
       - name: Get yarn cache
         id: yarn-cache
-        run: echo "{name}={dir::$(yarn cache dir)}" >> $GITHUB_OUTPUT
+        run: |
+          echo "{name}={dir::$(yarn cache dir)}"
+          echo "{dir}={$(yarn cache dir)}" >> $GITHUB_OUTPUT
 
       - name: Use yarn cache
         uses: actions/cache@v4
@@ -57,6 +59,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           version: '>= 507.0.0'
+          install_components: 'gsutil'
 
       - name: 'Use gcloud CLI 1'
         run: 'gcloud info'
