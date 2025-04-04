@@ -26,7 +26,7 @@ jobs:
 
       - name: Get yarn cache
         id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "{name}={dir::$(yarn cache dir)}" >> $GITHUB_OUTPUT
 
       - name: Use yarn cache
         uses: actions/cache@v4
@@ -50,8 +50,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '${{ secrets.GCS_SA_EMAIL }}'
+          workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ vars.GCS_SA_EMAIL }}'
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
