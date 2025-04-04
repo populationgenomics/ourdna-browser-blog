@@ -15,9 +15,6 @@ jobs:
   update-site:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
-    permissions:
-      contents: 'read'
-      id-token: 'write'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,9 +55,14 @@ jobs:
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 507.0.0'
 
-      - name: 'Use gcloud CLI'
+      - name: 'Use gcloud CLI 1'
         run: 'gcloud info'
+
+      - name: 'Use gcloud CLI 2'
+        run: 'gcloud auth list --filter=status:ACTIVE --format="value(account)"'
 
       - name: Deploy site
         run: |
