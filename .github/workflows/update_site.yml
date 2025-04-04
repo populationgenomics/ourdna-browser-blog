@@ -27,7 +27,6 @@ jobs:
       - name: Get yarn cache
         id: yarn-cache
         run: |
-          echo "dir::$(yarn cache dir)"
           echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Use yarn cache
@@ -57,21 +56,21 @@ jobs:
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
+        
+      - id: 'upload-file'
+        uses: 'google-github-actions/upload-cloud-storage@v2'
         with:
-          version: '>= 507.0.0'
-          install_components: 'gsutil'
+          path: 'public'
+          destination: 'cpg-ourdna-browser-dev-blog/main'
+          parent: false
+          headers: |-
+            cache-control: 'private, max-age=0, no-transform'
 
-      - name: 'Use gcloud CLI 1'
-        run: 'gcloud info'
+      # - name: Deploy site
+      #   run: |
+      #     gsutil ls "gs://cpg-ourdna-browser-dev-blog/main"
 
-      - name: 'Use gcloud CLI 2'
-        run: 'gcloud auth list --filter=status:ACTIVE --format="value(account)"'
-
-      - name: Deploy site
-        run: |
-          gsutil ls "gs://cpg-ourdna-browser-dev-blog"
-
-          gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/tmp"
-          gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/tmp"
-          gsutil -mq rsync -r "gs://cpg-ourdna-browser-dev-blog/tmp" "gs://cpg-ourdna-browser-dev-blog/main"
-          gsutil -mq rm -r "gs://cpg-ourdna-browser-dev-blog/tmp"
+      #     gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/tmp"
+      #     gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/tmp"
+      #     gsutil -mq rsync -r "gs://cpg-ourdna-browser-dev-blog/tmp" "gs://cpg-ourdna-browser-dev-blog/main"
+      #     gsutil -mq rm -r "gs://cpg-ourdna-browser-dev-blog/tmp"
