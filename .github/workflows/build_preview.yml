@@ -1,0 +1,110 @@
+name: Build preview
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths-ignore:
+      - 'auth/**'
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      statuses: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set preview status
+        if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BLOG_URL: ${{ vars.BLOG_URL }}
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
+          curl \
+            --silent --show-error \
+            --request POST \
+            --url "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${sha}" \
+            --header "authorization: Bearer ${GITHUB_TOKEN}" \
+            --header "content-type: application/json" \
+            --data "{
+              \"state\": \"pending\",
+              \"target_url\": \"${BLOG_URL}/news/preview/${pr_number}\",
+              \"description\": \"Building preview\",
+              \"context\": \"Preview\"
+            }" > /dev/null
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.20.3
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Use yarn cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive --no-progress
+
+      - name: Build site
+        env:
+          BLOG_URL: ${{ vars.BLOG_URL }}
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          PATH_PREFIX="/news/preview/${pr_number}" yarn run build
+
+      - name: gcloud auth
+        if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        uses: google-github-actions/auth@v2
+        with:
+          # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ secrets.GCS_SA_EMAIL }}'
+
+      - name: Setup gcloud
+        if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy preview
+        if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        env:
+          GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          gsutil -mq rsync -r "public" "gs://${GCS_BUCKET}/pulls/${pr_number}"
+          gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://${GCS_BUCKET}/pulls/${pr_number}"
+
+      - name: Update preview status
+        if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BLOG_URL: ${{ vars.BLOG_URL }}
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
+          curl \
+            --silent --show-error \
+            --request POST \
+            --url "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${sha}" \
+            --header "authorization: Bearer ${GITHUB_TOKEN}" \
+            --header "content-type: application/json" \
+            --data "{
+              \"state\": \"success\",
+              \"target_url\": \"${BLOG_URL}/news/preview/${pr_number}\",
+              \"description\": \"Preview ready, click 'Details' to view\",
+              \"context\": \"Preview\"
+            }" > /dev/null

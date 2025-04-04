@@ -1,0 +1,44 @@
+{
+  "name": "ourdna-browser-blog",
+  "private": true,
+  "workspaces": [
+    "plugins/*"
+  ],
+  "scripts": {
+    "start": "concurrently \"gatsby develop\" \"netlify-cms-proxy-server\"",
+    "build": "gatsby build --prefix-paths",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "decap-cms-app": "^3.1.10",
+    "gatsby": "^5.13.6",
+    "gatsby-plugin-catch-links": "^5.13.1",
+    "gatsby-plugin-decap-cms": "^4.0.4",
+    "gatsby-plugin-feed": "^5.13.1",
+    "gatsby-plugin-google-gtag": "^5.13.1",
+    "gatsby-plugin-react-helmet": "^6.13.1",
+    "gatsby-remark-autolink-headers": "^6.13.1",
+    "gatsby-remark-prismjs": "^7.13.1",
+    "gatsby-remark-responsive-iframe": "^6.13.1",
+    "gatsby-remark-smartypants": "^6.13.1",
+    "gatsby-source-filesystem": "^5.13.1",
+    "gatsby-transformer-remark": "^6.13.1",
+    "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
+    "prismjs": "^1.27.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "styled-components": "^5.3.5"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "eslint": "^7.26.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "netlify-cms-proxy-server": "^1.3.23",
+    "prettier": "^2.0.1"
+  }
+}

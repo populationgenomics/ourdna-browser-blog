@@ -1,0 +1,35 @@
+name: Delete preview
+on:
+  pull_request:
+    types:
+      - closed
+    paths-ignore:
+      - 'auth/**'
+jobs:
+  delete-preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: gcloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ secrets.GCS_SA_EMAIL }}'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Delete preview
+        env:
+          GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+        run: |
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          gsutil -mq rm -r "gs://${GCS_BUCKET}/pulls/${pr_number}"
