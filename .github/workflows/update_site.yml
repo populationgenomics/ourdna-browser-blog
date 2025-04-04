@@ -4,15 +4,13 @@ on:
     branches:
       - main
       - dev
-      # this is only for testing, remove once done
-      - setup_dev_version
     paths-ignore:
       - 'auth/**'
 
 jobs:
   update-site:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'setup_dev_version' && 'production' || 'development' }}
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
     permissions:
       contents: 'read'
       id-token: 'write'
