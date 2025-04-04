@@ -1,0 +1,60 @@
+name: Update site
+on:
+  push:
+    branches:
+      - main
+      - setup_dev_version
+    paths-ignore:
+      - 'auth/**'
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.20.3
+
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Use yarn cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive --no-progress
+
+      - name: Build site
+        env:
+          GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
+        run: |
+          PATH_PREFIX="/news" yarn run build
+
+      - name: gcloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ secrets.GCS_SA_EMAIL }}'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy site
+        run: |
+          gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/tmp"
+          gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/tmp"
+          gsutil -mq rsync -r "gs://cpg-ourdna-browser-dev-blog/tmp" "gs://cpg-ourdna-browser-dev-blog/main"
+          gsutil -mq rm -r "gs://cpg-ourdna-browser-dev-blog/tmp"

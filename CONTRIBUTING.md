@@ -24,7 +24,7 @@ Login to Netlify CMS at https://ourdna-dev.popgen.rocks/news/admin/. To make cha
 
    - When the PR is opened, a preview site containing its changes will automatically be deployed to `https://gnomad.broadinstitute.org/news/preview/<PR_NUMBER>`. This may take a few minutes. While it is building, a "Check for preview" button will appear in the top bar of the CMS next to the "Set status" and "Publish" buttons. Once the preview site is finished building, clicking that button will cause it to change to a "View Preview" link. To see progress generating the preview site, look at the PR's status checks on GitHub.
 
-5. When the post is ready, click the "Publish" button in Netlify CMS. This merges the PR. Alternatively, the PR can be merged on GitHub. Changes committed to the `main` branch will automatically be deployed to `https://gnomad.broadinstitute.org/news/`.
+5. When the post is ready, click the "Publish" button in Netlify CMS. This merges the PR. Alternatively, the PR can be merged on GitHub. Changes committed to the `main` branch will automatically be deployed to `https://ourdna.populationgenomics.org.au/news/`.
 
 ## Images
 

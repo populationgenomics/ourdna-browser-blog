@@ -37,7 +37,7 @@ CALLBACK_TEMPLATE = """<!DOCTYPE html>
 <body>
   <script>
     window.addEventListener("message", function (e) {
-      if (e.origin !== 'https://gnomad.broadinstitute.org') {
+      if (e.origin !== 'https://ourdna-dev.popgen.rocks') {
         console.warn('Invalid origin:', e.origin);
         return;
       }
