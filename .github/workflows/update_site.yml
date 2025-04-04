@@ -9,6 +9,7 @@ on:
 jobs:
   update-site:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -41,8 +42,7 @@ jobs:
           GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
           BLOG_URL: ${{ vars.BLOG_URL }}
         run: |
-          echo "$BLOG_URL"
-          PATH_PREFIX="/news" BLOG_URL="https://ourdna-dev.popgen.rocks" yarn run build
+          PATH_PREFIX="/news" yarn run build
 
       - name: gcloud auth
         uses: google-github-actions/auth@v2
