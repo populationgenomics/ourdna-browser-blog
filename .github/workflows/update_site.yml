@@ -64,5 +64,6 @@ jobs:
           path: 'public'
           destination: 'cpg-ourdna-browser-dev-blog/main'
           parent: false
+          process_gcloudignore: false
           headers: |-
             cache-control: 'private, max-age=0, no-transform'
