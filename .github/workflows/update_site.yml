@@ -3,18 +3,19 @@ on:
   push:
     branches:
       - main
+      - dev
+      # this is only for testing, remove once done
       - setup_dev_version
     paths-ignore:
       - 'auth/**'
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   update-site:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,26 +52,17 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: '${{ vars.GCS_SA_EMAIL }}'
+          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ secrets.GCS_SA_EMAIL }}'
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         
-      - id: 'upload-file'
-        uses: 'google-github-actions/upload-cloud-storage@v2'
+      - id: Deploy site
+        uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: 'public'
           destination: 'cpg-ourdna-browser-dev-blog/main'
           parent: false
           headers: |-
             cache-control: 'private, max-age=0, no-transform'
-
-      # - name: Deploy site
-      #   run: |
-      #     gsutil ls "gs://cpg-ourdna-browser-dev-blog/main"
-
-      #     gsutil -mq rsync -r "public" "gs://cpg-ourdna-browser-dev-blog/tmp"
-      #     gsutil -mq setmeta -h "Cache-Control:private, max-age=0, no-transform" -r "gs://cpg-ourdna-browser-dev-blog/tmp"
-      #     gsutil -mq rsync -r "gs://cpg-ourdna-browser-dev-blog/tmp" "gs://cpg-ourdna-browser-dev-blog/main"
-      #     gsutil -mq rm -r "gs://cpg-ourdna-browser-dev-blog/tmp"
