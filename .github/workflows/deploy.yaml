@@ -5,8 +5,9 @@ on:
     branches:
       - main
       - dev
-    paths:
-      - 'auth/**'
+      - ci-deploy
+    # paths:
+    #   - 'auth/**'
 
 
 env:
