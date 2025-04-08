@@ -74,6 +74,7 @@ jobs:
           gcloud --quiet auth configure-docker $DOCKER_REGISTRY
 
       - name: "Build Auth image"
+        working-directory: ./auth
         run: |
           docker build \
             --pull --provenance=false \
@@ -82,6 +83,7 @@ jobs:
             .
 
       - name: "Build Blog image"
+        working-directory: ./auth
         run: |
           docker build \
             --pull --provenance=false \
