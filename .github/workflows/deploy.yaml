@@ -1,0 +1,112 @@
+name: Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'auth/**'
+
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_ZONE: australia-southeast1-a
+  DEPLOYMENT_NAME: ${{ secrets.GKE_PROJECT }}-green
+  DOCKER_REGISTRY: australia-southeast1-docker.pkg.dev
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    env:
+      DOCKER_BUILDKIT: 1
+      BUILDKIT_PROGRESS: plain
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+      AUTH_DOCKER: gnomad/gnomad-blog-auth
+      BLOG_DOCKER: gnomad/gnomad-blog
+
+    defaults:
+      run:
+        shell: bash -eo pipefail -l {0}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: "Setup env vars based on short SHA"
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+          authImageId=$DOCKER_REGISTRY/$PROJECT_ID/$AUTH_DOCKER:$calculatedSha
+          echo "AUTH_DOCKER_ID=$authImageId" >> $GITHUB_ENV
+
+          blogImageId=$DOCKER_REGISTRY/$PROJECT_ID/$BLOG_DOCKER:$calculatedSha
+          echo "BLOG_DOCKER_ID=$blogImageId" >> $GITHUB_ENV
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.20.3
+
+      - name: gcloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          # Format for this secret is: projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: '${{ secrets.GCS_SA_EMAIL }}'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: "gke-gcloud-auth-plugin"
+        
+      - name: "Docker auth"
+        run: |
+          gcloud --quiet auth configure-docker $DOCKER_REGISTRY
+
+      - name: "Build Auth image"
+        run: |
+          docker build \
+            --pull --provenance=false \
+            --tag ${{ env.AUTH_DOCKER }} \
+            -f auth/auth.dockerfile \
+            .
+
+      - name: "Build Blog image"
+        run: |
+          docker build \
+            --pull --provenance=false \
+            --tag ${{ env.BLOG_DOCKER }} \
+            -f auth/blog.dockerfile \
+            .
+
+      # Push the Docker image to Google Artifact Registry
+      - name: "Publish to Artifact Registry"
+        run: |-
+          docker push ${{ env.AUTH_DOCKER_ID }}
+          docker push ${{ env.BLOG_DOCKER_ID }}
+
+      # Configure kubectl
+      - name: "Authenticate kubectl"
+        run: |-
+          gcloud container clusters get-credentials $GKE_CLUSTER --region=$GKE_ZONE
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy Auth
+        run: |-
+          kubectl set image deployment/gnomad-blog-auth-$DEPLOYMENT_NAME app=${{ env.AUTH_DOCKER_ID }}
+          kubectl rollout status deployment/gnomad-blog-auth-$DEPLOYMENT_NAME
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy Blog
+        run: |-
+          kubectl set image deployment/gnomad-blog-$DEPLOYMENT_NAME web=${{ env.BLOG_DOCKER_ID }}
+          kubectl rollout status deployment/gnomad-blog-$DEPLOYMENT_NAME
