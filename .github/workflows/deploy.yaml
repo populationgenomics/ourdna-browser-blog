@@ -73,22 +73,20 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker $DOCKER_REGISTRY
 
-      - name: "Build Auth image"
-        working-directory: ./auth
+      - name: "Build Blog image"
         run: |
           docker build \
-            --pull --provenance=false \
-            --tag ${{ env.AUTH_DOCKER }} \
-            -f auth.dockerfile \
+            --provenance=false \
+            --tag ${{ env.BLOG_DOCKER }} \
+            -f auth/blog.dockerfile --no-cache \
             .
 
-      - name: "Build Blog image"
-        working-directory: ./auth
+      - name: "Build Auth image"
         run: |
           docker build \
-            --pull --provenance=false \
-            --tag ${{ env.BLOG_DOCKER }} \
-            -f blog.dockerfile \
+            --provenance=false \
+            --tag ${{ env.AUTH_DOCKER }} \
+            -f auth/auth.dockerfile --no-cache \
             .
 
       # Push the Docker image to Google Artifact Registry
