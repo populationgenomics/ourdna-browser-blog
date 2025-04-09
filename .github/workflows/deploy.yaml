@@ -77,7 +77,7 @@ jobs:
         run: |
           docker build \
             --pull --provenance=false \
-            --tag ${{ env.BLOG_DOCKER }} \
+            --tag ${{ env.BLOG_DOCKER_ID }} \
             -f auth/blog.dockerfile \
             .
 
@@ -85,7 +85,7 @@ jobs:
         run: |
           docker build \
             --pull --provenance=false \
-            --tag ${{ env.AUTH_DOCKER }} \
+            --tag ${{ env.AUTH_DOCKER_ID }} \
             -f auth/auth.dockerfile \
             .
 
