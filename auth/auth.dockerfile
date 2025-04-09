@@ -3,21 +3,20 @@ FROM python:3.12-alpine
 # Create app user and group
 RUN addgroup -S app && adduser -S app -G app
 
+RUN mkdir /app && chown app:app /app
+
+USER app
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Copy files
+COPY --chown=app:app auth/auth-requirements.txt /app/auth-requirements.txt
+COPY --chown=app:app auth/auth.py /app/auth.py
+
 # Install dependencies
-COPY auth-requirements.txt .
 RUN pip install --no-cache-dir -r auth-requirements.txt
-
-# Copy code
-COPY auth.py .
-
-# Run as app user
-RUN chown -R app:app .
-USER app
 
 # Run
 CMD ["gunicorn", \
