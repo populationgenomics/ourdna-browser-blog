@@ -79,7 +79,7 @@ jobs:
           docker build \
             --pull --provenance=false \
             --tag ${{ env.AUTH_DOCKER }} \
-            -f auth/auth.dockerfile \
+            -f auth.dockerfile \
             .
 
       - name: "Build Blog image"
@@ -88,7 +88,7 @@ jobs:
           docker build \
             --pull --provenance=false \
             --tag ${{ env.BLOG_DOCKER }} \
-            -f auth/blog.dockerfile \
+            -f blog.dockerfile \
             .
 
       # Push the Docker image to Google Artifact Registry
