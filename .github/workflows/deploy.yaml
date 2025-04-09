@@ -74,17 +74,13 @@ jobs:
         run: |
           gcloud --quiet auth configure-docker $DOCKER_REGISTRY
 
-      - name: "Show environment"
-        run: |
-          echo ${{ env.ENVIRONMENT_NAME }}
-
       - name: "Build Blog image"
         run: |
           docker build \
+            --build-arg ENVIRONMENT=${{ env.ENVIRONMENT_NAME }} \
             --pull --provenance=false \
             --tag ${{ env.BLOG_DOCKER_ID }} \
             -f auth/blog.dockerfile \
-            --build-arg ENVIRONMENT=${{ env.ENVIRONMENT_NAME }}
             .
 
       - name: "Build Auth image"

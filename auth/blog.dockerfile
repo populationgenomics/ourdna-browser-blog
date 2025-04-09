@@ -1,6 +1,5 @@
-FROM nginx:stable-alpine
-
 ARG ENVIRONMENT=production
+FROM nginx:stable-alpine
 
 COPY auth/gcs-proxy.conf /etc/nginx/gcs-proxy.conf
 COPY auth/blog.$ENVIRONMENT.nginx.conf /etc/nginx/blog.conf.template
