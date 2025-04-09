@@ -52,7 +52,7 @@ jobs:
           blogImageId=$DOCKER_REGISTRY/$PROJECT_ID/$BLOG_DOCKER:$calculatedSha
           echo "BLOG_DOCKER_ID=$blogImageId" >> $GITHUB_ENV
 
-          envName=${steps.vars.outputs.environment}
+          envName=${{ steps.vars.outputs.environment}}
           echo "ENVIRONMENT_NAME=$envName" >> $GITHUB_ENV
 
       - name: Setup Node.js
