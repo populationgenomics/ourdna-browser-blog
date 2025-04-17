@@ -105,8 +105,8 @@ jobs:
       # Deploy the Docker image to the GKE cluster
       - name: Deploy Blog
         run: |-
-          kubectl set image deployment/gnomad-blog-$DEPLOYMENT_NAME web=${{ env.BLOG_DOCKER_ID }}
-          kubectl rollout status deployment/gnomad-blog-$DEPLOYMENT_NAME
+          kubectl set image deployment/gnomad-blog web=${{ env.BLOG_DOCKER_ID }}
+          kubectl rollout status deployment/gnomad-blog
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy Auth
