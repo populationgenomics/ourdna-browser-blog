@@ -103,13 +103,14 @@ jobs:
           gcloud container clusters get-credentials $GKE_CLUSTER --region=$GKE_ZONE
 
       # Deploy the Docker image to the GKE cluster
+      - name: Deploy Blog
+        run: |-
+          kubectl set image deployment/gnomad-blog-$DEPLOYMENT_NAME web=${{ env.BLOG_DOCKER_ID }}
+          kubectl rollout status deployment/gnomad-blog-$DEPLOYMENT_NAME
+
+      # Deploy the Docker image to the GKE cluster
       - name: Deploy Auth
         run: |-
           kubectl set image deployment/gnomad-blog-auth-$DEPLOYMENT_NAME app=${{ env.AUTH_DOCKER_ID }}
           kubectl rollout status deployment/gnomad-blog-auth-$DEPLOYMENT_NAME
 
-      # Deploy the Docker image to the GKE cluster
-      - name: Deploy Blog
-        run: |-
-          kubectl set image deployment/gnomad-blog-$DEPLOYMENT_NAME web=${{ env.BLOG_DOCKER_ID }}
-          kubectl rollout status deployment/gnomad-blog-$DEPLOYMENT_NAME
