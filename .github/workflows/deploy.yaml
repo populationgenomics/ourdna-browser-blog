@@ -78,6 +78,7 @@ jobs:
         run: |
           docker build \
             --build-arg ENVIRONMENT=${{ env.ENVIRONMENT_NAME }} \
+            --build-arg GCP_KEY=${{ secrets.GCP_APP_SA_KEY }} \
             --pull --provenance=false \
             --tag ${{ env.BLOG_DOCKER_ID }} \
             -f auth/blog.dockerfile \
@@ -109,8 +110,8 @@ jobs:
           kubectl rollout status deployment/gnomad-blog
 
       # Deploy the Docker image to the GKE cluster
-      - name: Deploy Auth
-        run: |-
-          kubectl set image deployment/gnomad-blog-auth-$DEPLOYMENT_NAME app=${{ env.AUTH_DOCKER_ID }}
-          kubectl rollout status deployment/gnomad-blog-auth-$DEPLOYMENT_NAME
+      # - name: Deploy Auth
+      #   run: |-
+      #     kubectl set image deployment/gnomad-blog-auth-$DEPLOYMENT_NAME app=${{ env.AUTH_DOCKER_ID }}
+      #     kubectl rollout status deployment/gnomad-blog-auth-$DEPLOYMENT_NAME
 
