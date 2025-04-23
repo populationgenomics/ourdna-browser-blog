@@ -1,4 +1,4 @@
-FROM golang:1.10.0-alpine AS gcsfuse
+FROM golang:1.24.0-alpine AS gcsfuse
 
 RUN apk add --no-cache git
 ENV GOPATH /go
@@ -8,11 +8,11 @@ FROM nginx:alpine
 
 ARG ENVIRONMENT=production
 
+COPY "auth/blog.$ENVIRONMENT.nginx.conf" /etc/nginx/blog.conf.template
+
 RUN apk add --no-cache ca-certificates fuse
 
 COPY --from=gcsfuse /go/bin/gcsfuse /usr/local/bin
-
-COPY "auth/blog.$ENVIRONMENT.nginx.conf" /etc/nginx/blog.conf.template
 
 # Bucket files will be mounted here
 RUN mkdir -p /usr/share/nginx/news
