@@ -79,6 +79,7 @@ jobs:
           docker build \
             --build-arg ENVIRONMENT=${{ env.ENVIRONMENT_NAME }} \
             --pull --provenance=false \
+            --no-cache
             --tag ${{ env.BLOG_DOCKER_ID }} \
             -f auth/blog.dockerfile \
             .
