@@ -78,7 +78,6 @@ jobs:
         run: |
           docker build \
             --build-arg ENVIRONMENT=${{ env.ENVIRONMENT_NAME }} \
-            --build-arg GCP_KEY='${{ secrets.GCP_APP_SA_KEY }}' \
             --pull --provenance=false \
             --tag ${{ env.BLOG_DOCKER_ID }} \
             -f auth/blog.dockerfile \
