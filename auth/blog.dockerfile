@@ -1,12 +1,12 @@
 FROM golang:1.10.0-alpine AS gcsfuse
 
-ARG ENVIRONMENT=production
-
 RUN apk add --no-cache git
 ENV GOPATH /go
 RUN go get -u github.com/googlecloudplatform/gcsfuse
 
 FROM nginx:alpine
+
+ARG ENVIRONMENT=production
 
 RUN apk add --no-cache ca-certificates fuse
 
