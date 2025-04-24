@@ -4,9 +4,7 @@ RUN go install github.com/googlecloudplatform/gcsfuse/v2@master
 
 FROM nginx:alpine
 
-ARG ENVIRONMENT=production
-
-COPY "auth/blog.$ENVIRONMENT.nginx.conf" /etc/nginx/blog.conf.template
+COPY "auth/blog.nginx.conf" /etc/nginx/blog.conf.template
 
 RUN apk add --no-cache ca-certificates fuse
 
