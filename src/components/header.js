@@ -7,7 +7,7 @@ const Header = ({ siteTitle }) => {
   return (
     <header id="header">
       <h1 className="header-title">
-        <Link to="https://ourdna-dev.popgen.rocks/">{siteTitle}</Link>
+        <Link to="/">{siteTitle}</Link>
       </h1>
 
       <nav role="navigation">
@@ -25,37 +25,37 @@ const Header = ({ siteTitle }) => {
         </button>
         <ul id="nav-list" className={isExpanded ? "expanded" : undefined}>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/about">
+            <a className="nav-link" href="/about">
               About
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/team">
+            <a className="nav-link" href="/team">
               Team
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/federated">
+            <a className="nav-link" href="/federated">
               Federated
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/stats">
+            <a className="nav-link" href="/stats">
               Stats
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/policies">
+            <a className="nav-link" href="/policies">
               Policies
             </a>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/">
+            <Link className="nav-link" to="/news/">
               Blog
             </Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/feedback">
+            <a className="nav-link" href="/contact">
               Contact
             </a>
           </li>
