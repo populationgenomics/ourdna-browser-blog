@@ -39,9 +39,7 @@ const Header = ({ siteTitle }) => {
         <LogoWrapper>
           <Link to="/" onClick={closeMenu}>
             <Logo>
-              <svg width="50" viewBox="0 0 341 228">
-                <image href={logoImage} />
-              </svg>
+              <img src={logoImage} alt="Logo" width="50" />
             </Logo>
           </Link>
         </LogoWrapper>
