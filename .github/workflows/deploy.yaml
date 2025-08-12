@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - ci-deploy
+      - fixing-header-footer
     paths:
       - 'auth/**'
 

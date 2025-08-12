@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - dev
-      - ci-deploy
+      - fixing-header-footer
     paths-ignore:
       - 'auth/**'
 
@@ -43,9 +43,9 @@ jobs:
       - name: Build site
         env:
           GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
-          BLOG_URL: ${{ vars.BLOG_URL }}
+          BLOG_URL: ${{ secrets.BLOG_URL }}
         run: |
-          PATH_PREFIX="/news" yarn run build
+          PATH_PREFIX="/" yarn run build
 
       - name: gcloud auth
         uses: google-github-actions/auth@v2
