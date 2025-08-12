@@ -1,13 +1,50 @@
 import { Link } from "gatsby";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import styled from 'styled-components';
+import logoImage from './OurDNA_Browser_Header.png';
+
+
+const LogoWrapper = styled.div`
+  @media (max-width: 900px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+`
+
+const Logo = styled.div`
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+`
 
 const Header = ({ siteTitle }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleMenu = useCallback(() => {
+    setIsExpanded((previousValue) => !previousValue)
+  }, [])
+  const closeMenu = useCallback(() => {
+    setIsExpanded(false)
+  }, []);
+
   return (
     <header id="header">
+
       <h1 className="header-title">
-        <Link to="/">{siteTitle}</Link>
+        <LogoWrapper>
+          <Link to="/" onClick={closeMenu}>
+            <Logo>
+              <svg width="50" viewBox="0 0 341 228">
+                <image href={logoImage} />
+              </svg>
+            </Logo>
+          </Link>
+        </LogoWrapper>
       </h1>
 
       <nav role="navigation">
@@ -27,11 +64,6 @@ const Header = ({ siteTitle }) => {
           <li className="nav-item">
             <a className="nav-link" href="/about">
               About
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="/team">
-              Team
             </a>
           </li>
           <li className="nav-item">
