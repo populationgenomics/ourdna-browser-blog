@@ -9,5 +9,3 @@ authors:
 ---
 
 <!-- end_excerpt -->
-
-![](../images/OurDNA_Browser_Header.png)

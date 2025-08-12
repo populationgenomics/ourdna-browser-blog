@@ -15,11 +15,9 @@ const LogoWrapper = styled.div`
 `
 
 const Logo = styled.div`
-  width: 1px;
-  height: 1px;
+  width: 0px;
+  height: 0px;
   background-image: url(./OurDNA_Browser_Header.png);
-  background-repeat: no-repeat;
-  background-size: 1px auto;
 `
 
 const Header = ({ siteTitle }) => {
@@ -35,8 +33,7 @@ const Header = ({ siteTitle }) => {
       <h1 className="header-title">
         <LogoWrapper>
           <Link to="../" onClick={closeMenu}>
-            <Logo>
-            </Logo>
+            <Logo/>
             <img src="./OurDNA_Browser_Header.png" alt="Logo" width="50" />
           </Link>
         </LogoWrapper>
