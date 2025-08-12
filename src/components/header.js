@@ -17,7 +17,7 @@ const LogoWrapper = styled.div`
 const Logo = styled.div`
   width: 0px;
   height: 0px;
-  background-image: url(/OurDNA_Browser_Header.png);
+  background-image: url(./OurDNA_Browser_Header.png);
 `
 
 const Header = ({ siteTitle }) => {
