@@ -2,7 +2,6 @@ import { Link } from "gatsby";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import styled from 'styled-components';
-import logoImage from './OurDNA_Browser_Header.png';
 
 const LogoWrapper = styled.div`
   @media (max-width: 900px) {
@@ -38,7 +37,7 @@ const Header = ({ siteTitle }) => {
           <Link to="../" onClick={closeMenu}>
             <Logo>
             </Logo>
-            <img src={logoImage} alt="Logo" width="50" />
+            <img src="./OurDNA_Browser_Header.png" alt="Logo" width="50" />
           </Link>
         </LogoWrapper>
       </h1>
