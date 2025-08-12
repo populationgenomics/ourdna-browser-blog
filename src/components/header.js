@@ -2,7 +2,7 @@ import { Link } from "gatsby";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import styled from 'styled-components';
-
+import logoImage from './OurDNA_Browser_Header.png';
 
 const LogoWrapper = styled.div`
   @media (max-width: 900px) {
@@ -16,11 +16,11 @@ const LogoWrapper = styled.div`
 `
 
 const Logo = styled.div`
-  width: 50px;
-  height: 38px;
+  width: 1px;
+  height: 1px;
   background-image: url(./OurDNA_Browser_Header.png);
   background-repeat: no-repeat;
-  background-size: 50px auto;
+  background-size: 1px auto;
 `
 
 const Header = ({ siteTitle }) => {
@@ -35,9 +35,10 @@ const Header = ({ siteTitle }) => {
 
       <h1 className="header-title">
         <LogoWrapper>
-          <Link to="/" onClick={closeMenu}>
+          <Link to="../" onClick={closeMenu}>
             <Logo>
             </Logo>
+            <img src={logoImage} alt="Logo" width="50" />
           </Link>
         </LogoWrapper>
       </h1>
