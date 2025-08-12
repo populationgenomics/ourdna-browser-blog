@@ -32,7 +32,7 @@ const Header = ({ siteTitle }) => {
 
       <h1 className="header-title">
         <LogoWrapper>
-          <Link to="/" onClick={closeMenu}>
+          <Link to="/about" onClick={closeMenu}>
             <Logo/>
             <img src="/news/OurDNA_Browser_Header.png" alt="Logo" width="50" />
           </Link>
@@ -76,7 +76,7 @@ const Header = ({ siteTitle }) => {
             </a>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/news/">
+            <Link className="nav-link" to="/">
               Blog
             </Link>
           </li>
