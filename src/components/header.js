@@ -2,7 +2,6 @@ import { Link } from "gatsby";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import styled from 'styled-components';
-import logoImage from './OurDNA_Browser_Header.png';
 
 
 const LogoWrapper = styled.div`
@@ -17,17 +16,16 @@ const LogoWrapper = styled.div`
 `
 
 const Logo = styled.div`
-  color: white;
-  font-size: 1.5em;
-  font-weight: bold;
+  width: 50px;
+  height: 38px;
+  background-image: url(./OurDNA_Browser_Header.png);
+  background-repeat: no-repeat;
+  background-size: 50px auto;
 `
 
 const Header = ({ siteTitle }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const toggleMenu = useCallback(() => {
-    setIsExpanded((previousValue) => !previousValue)
-  }, [])
   const closeMenu = useCallback(() => {
     setIsExpanded(false)
   }, []);
@@ -39,11 +37,12 @@ const Header = ({ siteTitle }) => {
         <LogoWrapper>
           <Link to="/" onClick={closeMenu}>
             <Logo>
-              <img src={logoImage} alt="Logo" width="50" />
             </Logo>
           </Link>
         </LogoWrapper>
       </h1>
+
+
 
       <nav role="navigation">
         <button
