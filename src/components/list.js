@@ -11,7 +11,7 @@ const ArticleList = ({ heading, posts, extraSidebarContent }) => {
       <h1>News</h1>
       <p>
         The news page highlights new features, versions, or other major announcements. See our{" "}
-        <Link to="/changelog">changelog</Link> for all changes to gnomAD, including minor ones.
+        <Link to="/changelog">changelog</Link> for all changes to OurDNA, including minor ones.
       </p>
       <br />
       <div className="article-list-inner">

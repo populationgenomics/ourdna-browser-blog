@@ -1,14 +1,45 @@
 import { Link } from "gatsby";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import styled from 'styled-components';
+
+const LogoWrapper = styled.div`
+  @media (max-width: 900px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+`
+
+const Logo = styled.div`
+  width: 0px;
+  height: 0px;
+  background-image: url(./OurDNA_Browser_Header.png);
+`
 
 const Header = ({ siteTitle }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const closeMenu = useCallback(() => {
+    setIsExpanded(false)
+  }, []);
+
   return (
     <header id="header">
+
       <h1 className="header-title">
-        <Link to="https://ourdna-dev.popgen.rocks/">{siteTitle}</Link>
+        <LogoWrapper>
+          <a href="/about">
+            <Logo/>
+            <img src="/news/OurDNA_Browser_Header.png" alt="Logo" width="50" />
+          </a>
+        </LogoWrapper>
       </h1>
+
+
 
       <nav role="navigation">
         <button
@@ -25,27 +56,22 @@ const Header = ({ siteTitle }) => {
         </button>
         <ul id="nav-list" className={isExpanded ? "expanded" : undefined}>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/about">
+            <a className="nav-link" href="/about">
               About
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/team">
-              Team
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/federated">
+            <a className="nav-link" href="/federated">
               Federated
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/stats">
+            <a className="nav-link" href="/stats">
               Stats
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/policies">
+            <a className="nav-link" href="/policies">
               Policies
             </a>
           </li>
@@ -55,7 +81,7 @@ const Header = ({ siteTitle }) => {
             </Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="https://ourdna-dev.popgen.rocks/feedback">
+            <a className="nav-link" href="/contact">
               Contact
             </a>
           </li>

@@ -48,8 +48,8 @@ const Banner = styled.div`
 
 const BANNER_CONTENT = (
   <>
-    Help us continue to improve gnomAD by taking 5 minutes to fill out our {/* @ts-expect-error */}
-    <ExternalLink href="http://broad.io/2024_survey">user survey</ExternalLink>.
+    This is <b>DEVELOPMENT</b> version of OurDNA Browser! Please visit released version{' '}
+    <ExternalLink href="https://ourdna.populationgenomics.org.au">here</ExternalLink>.
   </>
 );
 
@@ -75,7 +75,7 @@ const Layout = ({ children, title }) => {
       >
         <meta
           name="description"
-          content="The Genome Aggregation Database (gnomAD) is a resource developed by an international coalition of investigators, with the goal of aggregating and harmonizing both exome and genome sequencing data from a wide variety of large-scale sequencing projects, and making summary data available for the wider scientific community."
+          content="The OurDNA browser provides access to harmonised, aggregated genome and exome sequences from the OurDNA program. The OurDNA dataset includes healthy individuals that self-identify as having ancestry from a subset of multicultural Australian communities. The OurDNA browser is maintained by the Centre for Population Genomics and is part of federated gnomAD."
         />
       </Helmet>
       <TopBarWrapper>
