@@ -32,10 +32,10 @@ const Header = ({ siteTitle }) => {
 
       <h1 className="header-title">
         <LogoWrapper>
-          <Link to="/about" onClick={closeMenu}>
+          <a href="/about">
             <Logo/>
             <img src="/news/OurDNA_Browser_Header.png" alt="Logo" width="50" />
-          </Link>
+          </a>
         </LogoWrapper>
       </h1>
 
