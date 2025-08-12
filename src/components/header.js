@@ -34,7 +34,7 @@ const Header = ({ siteTitle }) => {
         <LogoWrapper>
           <Link to="/" onClick={closeMenu}>
             <Logo/>
-            <img src="/OurDNA_Browser_Header.png" alt="Logo" width="50" />
+            <img src="/news/OurDNA_Browser_Header.png" alt="Logo" width="50" />
           </Link>
         </LogoWrapper>
       </h1>
