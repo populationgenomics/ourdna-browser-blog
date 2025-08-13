@@ -46,12 +46,6 @@ const Banner = styled.div`
   }
 `;
 
-const BANNER_CONTENT = (
-  <>
-    This is <b>DEVELOPMENT</b> version of OurDNA Browser! Please visit released version{' '}
-    <ExternalLink href="https://ourdna.populationgenomics.org.au">here</ExternalLink>.
-  </>
-);
 
 const Layout = ({ children, title }) => {
   const { site } = useStaticQuery(
@@ -80,7 +74,6 @@ const Layout = ({ children, title }) => {
       </Helmet>
       <TopBarWrapper>
         <Header siteTitle={site.siteMetadata.title} />
-        {BANNER_CONTENT && <Banner>{BANNER_CONTENT}</Banner>}
       </TopBarWrapper>
 
       <main>{children}</main>
