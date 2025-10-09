@@ -61,6 +61,11 @@ const Header = ({ siteTitle }) => {
             </a>
           </li>
           <li className="nav-item">
+            <a className="nav-link" href="/team">
+              Team
+            </a>
+          </li>
+          <li className="nav-item">
             <a className="nav-link" href="/federated">
               Federated
             </a>
