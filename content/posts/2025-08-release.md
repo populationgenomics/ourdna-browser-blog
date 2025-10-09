@@ -5,8 +5,10 @@ order: 1
 categories:
   - Release
 authors:
-  - Katie de Lange, on behalf of the CPG Population Genomics team
+  - Katie de Lange
 ---
+
+*By Katie de Lange on behalf of the Population Genomics team*
 
 # OurDNA v1.0
 
