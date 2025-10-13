@@ -14,12 +14,6 @@ const LogoWrapper = styled.div`
   }
 `
 
-const Logo = styled.div`
-  width: 0px;
-  height: 0px;
-  background-image: url(./OurDNA_Browser_Header.png);
-`
-
 const Header = ({ siteTitle }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -33,7 +27,6 @@ const Header = ({ siteTitle }) => {
       <h1 className="header-title">
         <LogoWrapper>
           <a href="/about">
-            <Logo/>
             <img src="/news/OurDNA_Browser_Header.png" alt="Logo" width="50" />
           </a>
         </LogoWrapper>
