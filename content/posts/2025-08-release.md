@@ -18,9 +18,9 @@ This initial release includes data from multiple Australian cohorts, and 89 memb
 
 In this blog post, we will break down the technical aspects of how this v1 release dataset was generated. For more information on the OurDNA program (including our current recruitment numbers, and information on how to participate) please visit the [OurDNA website](https://ourdna.org.au/).
 
-## Creating the OurDNA v1 release
+# Creating the OurDNA v1.0 release
 
-### Contributing datasets
+## Contributing datasets
 
 The OurDNA v1 release combines sequencing data from several Australian cohorts:
 
@@ -32,7 +32,7 @@ The OurDNA v1 release combines sequencing data from several Australian cohorts:
 
 * 89 genomes from members of the Australian Filipino community recruited into the [OurDNA program](https://www.ourdna.org.au/) (led by Daniel MacArthur), and sequenced as a pilot; many more genomes from diverse Australian communities will be coming from this program soon, with DNA samples already collected from over 2,000 individuals of Filipino and Vietnamese ancestry, and recruitment in the Lebanese community now well underway!
 
-### Harmonised processing
+## Harmonised processing
 
 We created a harmonised callset by processing all samples through a standardised pipeline, following the DRAGEN-GATK Best Practices guidelines. This pipeline was run on Google Cloud using a hail batch implementation, and includes the alignment of FASTQs or CRAMs to GRCh38 using DRAGMAP, followed by the genotyping of SNPs and indels with GATK HaplotypeCaller.
 
@@ -42,15 +42,11 @@ The resulting gVCFs were combined using hail to create two VariantDataset (VDS) 
 
 In addition, we also reprocessed 4,143 reference samples from the Human Genome Diversity Project (HGDP) and 1000 Genomes Project using the Terra-based WDL implementation of the DRAGEN-GATK Best Practices pipeline, and combined the resulting gVCFs into a reference VDS. 
 
-### Defining high-quality sites to use for QC
+## Defining high-quality sites to use for QC
 
 We pre-determined a set of high-quality sites to use for certain stages of sample QC, including assessing sample call rate and performing genetic ancestry inference. These were defined based on the HGDP and 1000 Genomes reference callset, with the goal of selecting sites that would include a reasonable amount of known global genetic diversity. 
 
-First, we subsetted the reference callset to high-quality, unrelated individuals based on the filtering suggested in [gnomAD v3.1.2](https://gnomad.broadinstitute.org/news/2021-10-gnomad-v3-1-2-minor-release/), retaining **2508** individuals from the 1000 Genomes Project and **865** from the HGDP cohort. This unrelated sample sample set includes representation from 10 super-populations, which collectively cover 80 populations:    
-
-![Population count in OurDNA browser v1](../images/2025/ourdna_browser_v1_population_count.png)
-
-We then filter variants in this callset to select:
+First, we subsetted the reference callset to high-quality, unrelated individuals based on the filtering suggested in [gnomAD v3.1.2](https://gnomad.broadinstitute.org/news/2021-10-gnomad-v3-1-2-minor-release/), retaining **2508** individuals from the 1000 Genomes Project and **865** from the HGDP cohort. We then filter variants in this callset to select:
 
 * Autosomal, bi-allelic SNPs in exome calling regions; which
 
@@ -68,15 +64,15 @@ We then filter variants in this callset to select:
 
 Finally, we perform LD pruning using a window size of 500kb and a r2 threshold of 0.2, leaving us with a total of **195,161** high quality sites. 
 
-### Quality control and allele frequency estimation
+## Quality control and allele frequency estimation
 
-#### Overview
+### Overview
 
 ![Overview of quality control and allele frequency estimation in OurDNA browser v1](../images/2025/ourdna_browser_v1_overview_qc.png)
 
-#### Sample QC
+### Sample QC
 
-##### Hard sample filtering
+#### Hard sample filtering
 
 Both the genome and exome callsets are made up of samples that were obtained and sequenced via a number of different collection pathways and processing labs, and using different exome capture sets, library preparations, and sequencing machines. As a result, we needed to apply careful sample filters to make sure we minimised batch effects, while also ensuring we were not performing this filtering in ways that would preferentially remove samples of diverse ancestry (particularly given an uneven distribution of this diversity between our contributing cohorts). 
 
@@ -110,7 +106,7 @@ The following metrics were also assessed, but no samples were identified as requ
 
 * Call rate across high quality sites > 90%
 
-##### Relatedness inference
+#### Relatedness inference
 
 We inferred pairs of first and second degree related samples across the joint exome and genome callset using [somalier](https://github.com/brentp/somalier), setting a relatedness threshold of 0.25. Using gnomAD’s [compute_related_samples_to_drop](https://broadinstitute.github.io/gnomad_methods/api_reference/sample_qc/relatedness.html#gnomad.sample_qc.relatedness.compute_related_samples_to_drop) function, we then extracted a maximally unrelated subset, preferentially keeping the better ranked sample when ranking based on:
 
@@ -120,11 +116,9 @@ We inferred pairs of first and second degree related samples across the joint ex
 
 * Highest mean depth on chr 20
 
-##### Genetic ancestry inference
+#### Genetic ancestry inference
 
-For a more detailed discussion of genetic ancestry inference in the OurDNA resource, please see our upcoming blog post. However, briefly, our approach to genetic ancestry inference was as follows.
-
-We first separately subset the exome and genome datasets to just those pre-selected high-quality sites that are variant in each of the respective callsets. We then combine these with the high-quality, unrelated HGDP and 1000 Genomes reference samples at those sites, and perform a Principal Component Analysis using gnomAD’s [run_pca_with_relateds](https://broadinstitute.github.io/gnomad_methods/api_reference/sample_qc/ancestry.html#gnomad.sample_qc.ancestry.run_pca_with_relateds) function. Genetic ancestry labels for the reference population are defined based on the harmonised descriptors from Koenig et al (2024), as described for gnomAD v4 [here](https://gnomad.broadinstitute.org/news/2023-11-genetic-ancestry/#sample-metadata-labels).
+In order to infer genetic ancestry, we first separately subset the exome and genome datasets to just those pre-selected high-quality sites that are variant in each of the respective callsets. We then combine these with the high-quality, unrelated HGDP and 1000 Genomes reference samples at those sites, and perform a Principal Component Analysis using gnomAD’s [run_pca_with_relateds](https://broadinstitute.github.io/gnomad_methods/api_reference/sample_qc/ancestry.html#gnomad.sample_qc.ancestry.run_pca_with_relateds) function. Genetic ancestry labels for the reference population are defined based on the harmonised descriptors from Koenig et al (2024), as described for gnomAD v4 [here](https://gnomad.broadinstitute.org/news/2023-11-genetic-ancestry/#sample-metadata-labels).
 
 We then train RandomForest classifiers for each callset using 12 PCs for exomes and 14 PCs for genomes, where the number of PCs are selected based on inspection of the variance captured, error rates, proportion of high-confidence assignments, and alignment with reported ancestries where relevant. Only RandomForest assignments with probabilities greater than 0.8 are retained, while the rest of the individuals are set to ‘Unclassified’. Ancestry groups with fewer than 25 individuals are also reassigned to ‘Unclassified’.
 
@@ -142,7 +136,7 @@ This results in the following breakdown of sample counts by inferred genetic anc
 
 Note that four Australian Filipino participants with self-identified dual ancestries, also confirmed by genetic data, are currently labelled as ‘Unclassified’ pending the inclusion of local ancestry approaches in our processing pipelines. 
 
-#### Variant QC
+### Variant QC
 
 Similar to gnomAD, we compute quasi allele-specific variant QC metrics in hail and then use the allele-specific (AS) version of GATK Variant Quality Score Recalibration (VQSR) to compute a score indicating the confidence that a variant is real as opposed to an artifact. We train both SNP and indel AS-VQSR models separately for exomes and genomes, using the default GATK bundle training resources and priors, and the following features:
 
@@ -178,7 +172,7 @@ In addition to the AS-VQSR filtering, we also applied the following hard filters
 
 After applying these filters, we retain 57,322,471 SNPs and 4,567,608 indels.
 
-#### Frequencies estimation
+### Frequencies estimation
 
 Finally, allele frequencies are computed separately for the exome and genome callsets across all variants, stratified by sex and assigned genetic ancestry.
 
@@ -186,7 +180,7 @@ We adopt the approach taken in [gnomAD v4.1](https://gnomad.broadinstitute.org/n
 
 For variants that are present in both exomes and genomes, we also display a combined allele frequency. As with gnomAD v4.1, we check for highly discordant frequencies between the exome and genome callsets - either using a [contingency table test](https://hail.is/docs/0.2/functions/stats.html#hail.expr.functions.contingency_table_test) (for variants observed in a single inferred genetic ancestry group) or the [Cochran-Mantel-Haenszel test](https://hail.is/docs/0.2/functions/stats.html#hail.expr.functions.cochran_mantel_haenszel_test) (when a variant is present in multiple groups). A warning flag is displayed for variants where the p-value for this test is less than 10<sup>-4</sup>. 
 
-## Acknowledgements
+# Acknowledgements
 
 While acknowledging that the creation of this OurDNA browser release was a massive team effort, involving critical contributions from a number of teams across the Centre for Population Genomics as well as many of our key collaborators, here we would like to thank a few specific people and teams for their major contributions to the technical aspects of producing this resource.
 
