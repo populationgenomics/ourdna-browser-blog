@@ -34,7 +34,7 @@ We created a harmonised callset by processing all samples through a standardised
 
 The resulting gVCFs were combined using hail to create two VariantDataset (VDS) objects: one containing all whole genome samples, and one containing all whole exome samples. 
 
-![The OurDNA Browser v1 pipeline](../images/2025/ourdna_browser_v1_pipeline.png)
+![The OurDNA Browser v1 pipeline](../../static/images/2025/ourdna_browser_v1_pipeline.png)
 
 In addition, we also reprocessed 4,143 reference samples from the Human Genome Diversity Project (HGDP) and 1000 Genomes Project using the Terra-based WDL implementation of the DRAGEN-GATK Best Practices pipeline, and combined the resulting gVCFs into a reference VDS. 
 
@@ -64,7 +64,7 @@ Finally, we perform LD pruning using a window size of 500kb and a r2 threshold o
 
 ### Overview
 
-![Overview of quality control and allele frequency estimation in OurDNA browser v1](../images/2025/ourdna_browser_v1_overview_qc.png)
+![Overview of quality control and allele frequency estimation in OurDNA browser v1](../../static/images/2025/ourdna_browser_v1_overview_qc.png)
 
 ### Sample QC
 
@@ -128,7 +128,7 @@ At this stage we also remove samples with inferred or reported Oceanic ancestry,
 
 This results in the following breakdown of sample counts by inferred genetic ancestry:
 
-![Breakdown of sample counts by inferred genetic ancestry in OurDNA browser v1](../images/2025/ourdna_browser_v1_ancestry_counts.png)
+![Breakdown of sample counts by inferred genetic ancestry in OurDNA browser v1](../../static/images/2025/ourdna_browser_v1_ancestry_counts.png)
 
 Note that four Australian Filipino participants with self-identified dual ancestries, also confirmed by genetic data, are currently labelled as ‘Unclassified’ pending the inclusion of local ancestry approaches in our processing pipelines. 
 
