@@ -1,16 +1,12 @@
 ---
-title: OurDNA Browser
+title: OurDNA v1.0
 date: 2025-10-10
 order: 1
 categories:
   - Release
 authors:
-  - Katie de Lange
+  - Katie de Lange, Population Genomics team
 ---
-
-*By Katie de Lange on behalf of the Population Genomics team*
-
-# OurDNA v1.0
 
 We are delighted to announce the v1 release of [the OurDNA browser](https://ourdna.populationgenomics.org.au/), which summarises variant and allele frequency information from 12,882 Australians, including exome sequencing data from 10,671 individuals and genome sequencing data from 2,211 individuals. 
 
