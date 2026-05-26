@@ -11,5 +11,10 @@ This project is CPG customised version of https://github.com/broadinstitute/gnom
 
 ## Contributing
 
-- For adding content to the blog, see [CONTRIBUTING.md](./CONTRIBUTING.md)
-- For changes to the blog layout, etc. see [DEVELOPMENT.md](./DEVELOPMENT.md)
+- Create new branch based on DEV branch
+- For adding new post place your content to a new MD file in the posts folder.
+- Place images under static / images / YYYY folder
+- test locally, see [DEVELOPMENT.md](./DEVELOPMENT.md)
+- Create new PR
+- Once merged into DEV check the dev server
+- Once happy with the content rais new PR from DEV to MAIN
