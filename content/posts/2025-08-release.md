@@ -26,7 +26,7 @@ The OurDNA v1 release combines sequencing data from several Australian cohorts:
 
 * 868 genomes from the Tasmanian Ophthalmic Biobank, a cohort of mostly European-ancestry individuals without strong ascertainment for any specific disease (led by Alex Hewitt), using data generated and analysed by the Centre for Population Genomics; and
 
-* 89 genomes from members of the Australian Filipino community recruited into the [OurDNA program](https://www.ourdna.org.au/) (led by Daniel MacArthur), and sequenced as a pilot; many more genomes from diverse Australian communities will be coming from this program soon, with DNA samples already collected from over 2,000 individuals of Filipino and Vietnamese ancestry, and recruitment in the Lebanese community now well underway!
+* 89 genomes from members of the Australian Filipino community recruited into the [OurDNA program](https://www.ourdna.org.au/) (led by Daniel MacArthur), and sequenced as a pilot; many more genomes from diverse Australian communities will be coming from this program soon, with DNA samples already collected from over 2,000 individuals of Filipino and Vietnamese ancestry, and recruitment in the Eastern Mediterranean community now well underway!
 
 ## Harmonised processing
 
